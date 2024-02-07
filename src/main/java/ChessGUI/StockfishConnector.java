@@ -1,7 +1,11 @@
 package ChessGUI;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -19,12 +23,31 @@ public class StockfishConnector {
     private final PrintWriter stockfishOutput;
 
     public StockfishConnector() throws IOException {
-        
-        stockfishProcess = new ProcessBuilder("stockfish.exe").start();
+        // Load Stockfish executable from classpath
+        InputStream stockfishStream = getClass().getResourceAsStream("/assets/stockfish.exe");
+
+        // Check if the executable is found
+        if (stockfishStream == null) {
+            throw new IOException("Stockfish executable not found in the classpath.");
+        }
+
+        // Write the executable to a temporary file
+        File stockfishFile = File.createTempFile("stockfish", ".exe");
+        try (OutputStream outputStream = new FileOutputStream(stockfishFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = stockfishStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+        }
+
+        // Start Stockfish process with the absolute path to the temporary file
+        stockfishProcess = new ProcessBuilder(stockfishFile.getAbsolutePath()).start();
         stockfishInput = new Scanner(new InputStreamReader(stockfishProcess.getInputStream()));
         stockfishOutput = new PrintWriter(new OutputStreamWriter(stockfishProcess.getOutputStream()));
         stockfishInput.nextLine();
     }
+
 
     public void sendCommand(String command) {
         stockfishOutput.println(command);

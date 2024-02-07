@@ -17,7 +17,7 @@ public class MiniMaxBot extends Player {
 
     @Override
     public Move toMove() {
-        return Chess.calculateBestMove(chess, 3);
+        return Chess.calculateBestMove(chess, 2);
     }
     
     public static void main(String[] args) {

@@ -6,10 +6,11 @@ package ChessGUI;
 
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -160,18 +161,25 @@ public class Chess {
         return file.exists();
     }
     
-    public static ArrayList<String> loadFromFile(String filePath) //load a text file seperated by \n
-    {
+    public static ArrayList<String> loadFromFile(String filePath) {
         ArrayList<String> lines = new ArrayList<>();
 
-        try {
-            lines.addAll(Files.readAllLines(Paths.get(filePath))); //read all lines to the array list
+        try (InputStream inputStream = Chess.class.getResourceAsStream(filePath);
+             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+             BufferedReader reader = new BufferedReader(inputStreamReader)) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return lines; //return the lines
+        return lines;
     }
+
     
     public static Move calculateBestMove(Chess chess, int depth) //use minimax to calculate best move
     {
@@ -179,34 +187,31 @@ public class Chess {
         this method is a wrapper for miniMax.
         */
         if (depth <= 0) return null; 
-        
-        ResultSet bookMove = db.queryDB("SELECT nextMove FROM OpeningBook WHERE FEN = '" + chess.getFENString(false) + "'");
-        //if this position is in the openingBook
+        if (db.isConnected())
+        {
+            ResultSet bookMove = db.queryDB("SELECT nextMove FROM OpeningBook WHERE FEN = '" + chess.getFENString(false) + "'");
+            //if this position is in the openingBook
 
-        try {
-            if (bookMove.next())
-            {
-                String bestMove = bookMove.getString("nextMove"); //get the best move
-                Thread.sleep(500);
-                // Process the bestMove and return early.
-                return Move.getMove(bestMove, chess); //return this best move
+            try {
+                if (bookMove.next())
+                {
+                    String bestMove = bookMove.getString("nextMove"); //get the best move
+                    Thread.sleep(500);
+                    // Process the bestMove and return early.
+                    return Move.getMove(bestMove, chess); //return this best move
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Chess.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Chess.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(Chess.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(Chess.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
-        //position was not in the openingBook, search instead
+        //database is not up, or position was not in the openingBook, search instead
         Chess miniMaxChess = chess.replica(); //make a copy of the chess instance
         
         miniMax(miniMaxChess, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth);
-        
-        System.out.println(chess.evaluate());
-        
-        System.out.println(Position.at(chess.getFENString(false)).getNextPositions());
         
         Position bestNextMove = Position.at(chess.getFENString(false)).getBestNextPosition();
         
@@ -225,43 +230,26 @@ public class Chess {
         return chess.evaluate();
     }
     
-    public static Move calculateWorstMove(Chess chess, int depth)
+    public static Move calculateWorstMove(Chess chess, int depth) //use minimax to calculate best move
     {
         /*
-        this method is a wrapper for maxiMin
+        this method is a wrapper for miniMax.
         */
-        if (depth <= 0) return null; //depth cannot be below 0
+        if (depth <= 0) return null;
         
-        Chess tempChess = chess.replica(); // make a copy of chess instance
-        boolean isWhite = tempChess.isWhiteToMove(); //declare which side to get move for
+        Chess miniMaxChess = chess.replica(); //make a copy of the chess instance
         
-        Move bestMove = null; //declare best move
-        double alpha = Double.NEGATIVE_INFINITY; 
-        double beta = Double.POSITIVE_INFINITY;
-        double bestScore = (!isWhite ? alpha : beta);
+        miniMax(miniMaxChess, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth); //search
         
+        Position worstNextMove = Position.at(chess.getFENString(false)).getWorstNextPosition();
         
-        for (Move move : tempChess.getAllLegalMoves())
-        {
-            tempChess.makeMove(move, false);
-            double evaluation = maxiMin(tempChess, alpha,beta,depth-1);
-            tempChess.unMakeMove(false);
-            if (isWhite ? evaluation < bestScore : evaluation > bestScore)
+        for (Move move : chess.getAllLegalMoves()){ //for all the legal unsortedMoves of the chess instance
+            if (move.getPostBoardFEN().equals(worstNextMove.getFEN())) //if this is the right move
             {
-                bestScore = evaluation;
-                bestMove = move;
+                return move; //return the move
             }
         }
-        
-        
-        for (Move move : chess.getAllLegalMoves())
-        {
-            if (move.equals(bestMove))
-            {
-                return move;
-            }
-        }
-        return null;
+        return null; //something happened, please crash
     }
     
     private static double miniMax(Chess chess, double alpha, double beta, int depth)
@@ -271,6 +259,7 @@ public class Chess {
         alpha - whites best evaluation achievable found down this line of moves
         beta - blacks best evaluation achievable found down this line of moves
         depth - how far down a line of sorted to search
+        whiteToMove - which side we are playing for.
         */
         Position thisPosition = Position.at(chess.getFENString(false));
         boolean isGameOver = chess.isGameOver();
@@ -284,7 +273,7 @@ public class Chess {
                 
                 return evaluation; //return a static evaluation
             } else { //if we are in check or last move was a capture
-                depth = 1; //search deeper
+                depth = 2; //search deeper
             }
         }
         
@@ -325,57 +314,6 @@ public class Chess {
             thisPosition.resortPositions();
         }
         
-        return currentEval;
-    }
-    
-    private static double maxiMin(Chess chess, double alpha, double beta, int depth)
-    {
-        /*
-        chess - the chess instance to perform computation on
-        alpha - whites worst evaluation achievable found down this line
-        beta - blacks worst evaluation achievable found down this line
-        depth - how far down a line of unsortedMoves to search
-        */
-        boolean isGameOver = chess.isGameOver();
-        if (depth == 0 || isGameOver)
-        {
-            if (!chess.isInCheck() || isGameOver)
-            {
-                return chess.evaluate();
-            } else {
-                depth = 1;
-            }
-        }
-
-        double currentEval;
-        if (chess.isWhiteToMove())
-        {
-            currentEval = Double.POSITIVE_INFINITY;
-            for (Move move : chess.getAllLegalMoves())
-            {
-                chess.makeMove(move, false);
-                double thisEval = maxiMin(chess, alpha, beta, depth - 1);
-                chess.unMakeMove(false);
-
-                currentEval = Math.min(currentEval, thisEval);
-                beta = Math.min(currentEval, beta);
-
-                if (beta < alpha) break;
-            }
-        } else {
-            currentEval = Double.NEGATIVE_INFINITY;
-            for (Move move : chess.getAllLegalMoves())
-            {
-                chess.makeMove(move, false);
-                double thisEval = maxiMin(chess, alpha, beta, depth - 1);
-                chess.unMakeMove(false);
-
-                currentEval = Math.max(currentEval, thisEval);
-                alpha = Math.max(currentEval, alpha);
-
-                if (beta < alpha) break;
-            }
-        }
         return currentEval;
     }
 
@@ -1628,7 +1566,7 @@ public class Chess {
     
     public static void collectOpeningBook() 
     {
-        ArrayList<String> FENS = loadFromFile("./assets/openingBook.txt");
+        ArrayList<String> FENS = loadFromFile("/assets/openingBook.txt");
         int num = 0;
         for (String fen : FENS)
         {
@@ -1645,7 +1583,8 @@ public class Chess {
     
     public static void main(String[] args) 
     {
-        
+        createOpeningBook();
+        collectOpeningBook();
     }
     
     

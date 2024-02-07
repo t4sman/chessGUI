@@ -13,6 +13,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -355,11 +356,21 @@ public class ChessboardPanel extends JPanel {
             }
         }
         
-        BufferedImage all;
+        BufferedImage all = null;
         try {
-            all=ImageIO.read(new File("assets/chessPieces.png"));
+            // Load the image using classpath-relative path
+            InputStream inputStream = getClass().getResourceAsStream("/assets/chessPieces.png");
+
+            if (inputStream != null) {
+                // Read the image from the input stream
+                all = ImageIO.read(inputStream);
+            } else {
+                
+            }
         } catch (IOException ex) {
-            return;
+            
+            ex.printStackTrace();
+            return; 
         }
         
         pieces = new Image[12];

@@ -5,20 +5,29 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public final class DBManager {
     
-    private static final String URL = "jdbc:derby:chessDB;create=true";  //url of the DB host
+    private static final String URL = "jdbc:derby:chessDB";  //url of the DB host
 
     Connection conn;
 
     public DBManager() {
+       
         establishConnection();
     }
 
     public static void main(String[] args) {
         DBManager dbManager = new DBManager();
         System.out.println(dbManager.getConnection());
+    }
+    
+    public boolean isConnected()
+    {
+        return conn != null;
     }
 
     public Connection getConnection() {
@@ -29,10 +38,13 @@ public final class DBManager {
     public void establishConnection() {
         try
         {
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
             conn=DriverManager.getConnection(URL);
             System.out.println(URL+" connected...");
         } catch (SQLException ex) {
-        System.err.println("SQLException: " + ex.getMessage());
+            System.err.println("SQLException: " + ex.getMessage());
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
 
@@ -66,7 +78,6 @@ public final class DBManager {
 
         Connection connection = this.conn;
         Statement statement = null;
-        ResultSet resultSet = null;
 
         try {
             statement = connection.createStatement();

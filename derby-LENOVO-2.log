@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri Jan 12 18:51:53 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018c-fc3a-1328-00000b5bac08 
+on database directory C:\Users\tasma\OneDrive - AUT University\Documents\NetBeansProjects\ChessGUI\chessDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@70dea4e 
+Loaded from file:/C:/Users/tasma/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=20.0.1+9-29
+user.dir=C:\Users\tasma\OneDrive - AUT University\Documents\NetBeansProjects\ChessGUI
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

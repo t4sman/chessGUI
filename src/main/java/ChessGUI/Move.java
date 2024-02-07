@@ -150,14 +150,6 @@ public class Move implements Comparable<Move>{
             return this.getFromSquare().equals(((Move) o).getFromSquare()) && this.getToSquare().equals(((Move) o).getToSquare());
         } else return false;
     }
-
-    @Override
-    public int hashCode() {
-        int pieceToMoveHash = this.getPieceToMove().hashCode();
-        int toSquareHash = this.getToSquare().hashCode();
-        int thisHash = toSquareHash + (pieceToMoveHash * 100); 
-        return thisHash;
-    }
     
     @Override
     public String toString()
@@ -213,7 +205,7 @@ public class Move implements Comparable<Move>{
         if (pieceToCapture != null)
         {
             rank += 2;
-            if (pieceToMove.getPieceID() + pieceToCapture.getPieceID() <= 0) {
+            if (pieceToMove.getPieceID() < pieceToCapture.getPieceID()) {
                 rank += 3;
             }
         }
@@ -224,7 +216,7 @@ public class Move implements Comparable<Move>{
 
     @Override
     public int compareTo(Move anotherMove) {
-        return this.rankMove().compareTo(anotherMove.rankMove()) * (this.pieceToMove.isWhite() ? 1 : -1);
+        return this.rankMove().compareTo(anotherMove.rankMove());
     }
 
     /**

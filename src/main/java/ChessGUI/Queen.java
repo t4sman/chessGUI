@@ -28,7 +28,7 @@ public class Queen extends Piece {
     }
     
     private Queen(int x, int y, boolean isWhite, Chess chess) {
-        super(x, y, isWhite,9,(5), chess);
+        super(x, y, isWhite,9,5, chess);
     }
 
     @Override

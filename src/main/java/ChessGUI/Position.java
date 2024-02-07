@@ -121,6 +121,11 @@ public class Position{
     {
         return whiteToMove ? bestMoveForWhite() : bestMoveForBlack();
     }
+    
+    public Position getWorstNextPosition()
+    {
+        return !whiteToMove ? bestMoveForWhite() : bestMoveForBlack();
+    }
 
     /**
      * @return the childFound

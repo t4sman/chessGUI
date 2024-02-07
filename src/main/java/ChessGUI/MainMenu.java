@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -26,12 +27,21 @@ public class MainMenu extends javax.swing.JPanel {
     public MainMenu(ChessGUI gui) {
         this.gui = gui;
         try {
-            backgroundImage =ImageIO.read(new File("assets/MainMenu.png"));
+            // Load the image using classpath-relative path
+            InputStream inputStream = getClass().getResourceAsStream("/assets/mainMenu.png");
+
+            if (inputStream != null) {
+                // Read the image from the input stream
+                backgroundImage = ImageIO.read(inputStream);
+            } else {
+                // Handle the case when the input stream is null (file not found)
+                System.err.println("Image file not found: assets/mainMenu.png");
+            }
         } catch (IOException ex) {
+            // Handle IOException
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
+
         initComponents();
     }
     

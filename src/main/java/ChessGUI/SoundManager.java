@@ -10,13 +10,16 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundManager {
 
-    private static final String directory = "./assets/sounds/";
+    private static final String directory = "assets/sounds/";
 
     private static final File endGame;
     private static final File startGame;
@@ -24,17 +27,35 @@ public class SoundManager {
     private static final File inCheck;
 
     static {
+        endGame = loadAudioFile("endGame.wav");
+        startGame = loadAudioFile("startGame.wav");
+        movePiece = loadAudioFile("pieceMove.wav");
+        inCheck = loadAudioFile("check.wav");
+    }
+
+    private static File loadAudioFile(String fileName) {
         try {
-            endGame = new File(directory + "endGame.wav");
-            startGame = new File(directory + "startGame.wav");
-            movePiece = new File(directory + "pieceMove.wav");
-            inCheck = new File(directory + "check.wav");
-        } catch (Exception e) {
-            // Handle exceptions appropriately
+            // Load the audio file from classpath resources
+            InputStream inputStream = SoundManager.class.getResourceAsStream("/" + directory + fileName);
+
+            if (inputStream == null) {
+                throw new IOException("Audio file not found in classpath: " + fileName);
+            }
+
+            // Create a temporary file
+            File audioFile = File.createTempFile(fileName, ".wav");
+
+            // Copy the audio data from InputStream to the temporary file
+            Files.copy(inputStream, audioFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            return audioFile;
+        } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Error initializing SoundManager");
+            throw new RuntimeException("Error loading audio file: " + fileName);
         }
     }
+
+
 
     public static void endGame() {
         try {
