@@ -143,28 +143,28 @@ public class ChessboardPanel extends JPanel {
     
     private void paintSelectedSquares(Graphics g)
     {
-        if (selectedSquares.isEmpty())
+        if (selectedSquares.isEmpty()) //if there are no selected square
         {
-            return;
+            return; //dont paint anything
         }
         
-        for (Square square : selectedSquares)
+        for (Square square : selectedSquares) //for all the selected squares
         {
-            paintSquare(g,square,Color.YELLOW);
+            paintSquare(g,square,Color.YELLOW); // paint them yellow
         }
         
         
     }
     
-    private void paintSquare(Graphics g, Square square, Color color)
+    private void paintSquare(Graphics g, Square square, Color color) 
     {
         
-        g.setColor(color);
+        g.setColor(color); //set the color to desired color
         if (this.blackOrientation())
-        {
-            square = Square.inverse(square);
+        { 
+            square = Square.inverse(square); //inverse the square if the human is playing as black
         } 
-        g.fillRect(square.getX()*getSquareSize(), (7-square.getY())*getSquareSize(), getSquareSize(), getSquareSize());
+        g.fillRect(square.getX()*getSquareSize(), (7-square.getY())*getSquareSize(), getSquareSize(), getSquareSize()); //paint this square
         
     }
     
@@ -174,9 +174,9 @@ public class ChessboardPanel extends JPanel {
     
     private void paintSelectedPiece(Graphics g)
     {
-        if (selectedPiece == null)
+        if (selectedPiece == null) //if we havent selected a piece
         {
-            return;
+            return; //paint nothing
         }
         Pieces imgPiece = null;
         switch(selectedPiece.toString())
@@ -219,34 +219,33 @@ public class ChessboardPanel extends JPanel {
                 break;
         }
         
-        g.drawImage(pieces[imgPiece.index], screenPieceX, screenPieceY, this);
+        g.drawImage(pieces[imgPiece.index], screenPieceX, screenPieceY, this); //paint the selected piece at the mouse cursor
         
     }
     
     private void paintLegalMoves(Graphics g)
     {
         try {
-            synchronized (repaintLock) {
-                if (selectedPiece == null)
-                {
-                    return;
-                }
+            if (selectedPiece == null) //if we havent selected a piece
+            {
+                return; //dont paint anything
+            }
 
-                ArrayList<Move> moves = chess.getLegalPieceMoves(selectedPiece);
-                
-                for (Move move : moves)
+            ArrayList<Move> moves = chess.getLegalPieceMoves(selectedPiece); //get the legal moves for the piece
+
+            for (Move move : moves) //for all the moves
+            {
+                if (move.getSpecialMove() == SpecialMoves.ENPASSANT) //paint enpassant blue
                 {
-                    if (move.getSpecialMove() == SpecialMoves.ENPASSANT)
-                    {
-                        paintSquare(g, move.getToSquare(), Color.BLUE);
-                    } else if(move.isCapture())
-                    {
-                        paintSquare(g, move.getToSquare(), Color.RED);
-                    } else {
-                        paintSquare(g,move.getToSquare(), Color.green);
-                    }
+                    paintSquare(g, move.getToSquare(), Color.BLUE);
+                } else if(move.isCapture()) //paint captures red
+                {
+                    paintSquare(g, move.getToSquare(), Color.RED);
+                } else { //paint other moves as green
+                    paintSquare(g,move.getToSquare(), Color.green);
                 }
             }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -254,11 +253,11 @@ public class ChessboardPanel extends JPanel {
     
     private void paintPieces(Graphics g)
     {
-        for(Piece piece : chess.getPlayingPieces())
+        for(Piece piece : chess.getPlayingPieces()) //for all pieces on the board
         {
-            if (piece == selectedPiece)
+            if (piece == selectedPiece) //if this is the selected piece
             {
-                continue;
+                continue; //dont paint it
             }
             Pieces imgPiece = null;
             switch(piece.toString())
@@ -302,6 +301,8 @@ public class ChessboardPanel extends JPanel {
                 default:
                     System.exit(0);
             }
+            
+            // paint the pieces
             if (this.blackOrientation())
             {
                 g.drawImage(pieces[imgPiece.index], (7-piece.getX()) * getSquareSize(), piece.getY() * getSquareSize(), this);
@@ -314,7 +315,7 @@ public class ChessboardPanel extends JPanel {
     
     private Piece getPieceByPixel(MouseEvent e)
     {
-        return chess.getPiece(getSquareByPixel(e));
+        return chess.getPiece(getSquareByPixel(e)); 
     }
     
     

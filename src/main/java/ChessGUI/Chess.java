@@ -162,22 +162,22 @@ public class Chess {
     }
     
     public static ArrayList<String> loadFromFile(String filePath) {
-        ArrayList<String> lines = new ArrayList<>();
+        ArrayList<String> lines = new ArrayList<>(); //make an arraylist to store lines of the text file
 
-        try (InputStream inputStream = Chess.class.getResourceAsStream(filePath);
-             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-             BufferedReader reader = new BufferedReader(inputStreamReader)) {
+        try (InputStream inputStream = Chess.class.getResourceAsStream(filePath); //retrieve the text file as a byte stream
+             InputStreamReader inputStreamReader = new InputStreamReader(inputStream); // parse the byte stream
+             BufferedReader reader = new BufferedReader(inputStreamReader)) { //read the byte stream as a string
 
             String line;
-            while ((line = reader.readLine()) != null) {
-                lines.add(line);
+            while ((line = reader.readLine()) != null) {  //while there are lines
+                lines.add(line); //add the line
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return lines;
+        return lines; //return the arraylist of lines
     }
 
     
@@ -233,7 +233,7 @@ public class Chess {
     public static Move calculateWorstMove(Chess chess, int depth) //use minimax to calculate best move
     {
         /*
-        this method is a wrapper for miniMax.
+        this method is a wrapper for Maximin.
         */
         if (depth <= 0) return null;
         
@@ -241,7 +241,7 @@ public class Chess {
         
         miniMax(miniMaxChess, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, depth); //search
         
-        Position worstNextMove = Position.at(chess.getFENString(false)).getWorstNextPosition();
+        Position worstNextMove = Position.at(chess.getFENString(false)).getWorstNextPosition(); //get the next worse position
         
         for (Move move : chess.getAllLegalMoves()){ //for all the legal unsortedMoves of the chess instance
             if (move.getPostBoardFEN().equals(worstNextMove.getFEN())) //if this is the right move
@@ -290,9 +290,9 @@ public class Chess {
 
             chess.unMakeMove(false); //unmake the move
             
-            if (!thisPosition.isChildrenFound())
+            if (!thisPosition.isChildrenFound()) //if this is a new position
             {
-                thisPosition.addPosition(newPosition);
+                thisPosition.addPosition(newPosition); //add the next position to this position
             } 
             
             currentEval = (chess.isWhiteToMove() ? Math.max(currentEval, thisEval) : Math.min(currentEval, thisEval)); // update currentEval if this move is a better move
@@ -307,14 +307,14 @@ public class Chess {
             if (beta < alpha) break;
 
         }
-        if (!thisPosition.isChildrenFound())
+        if (!thisPosition.isChildrenFound()) //if this is the first time we have visited this position
         {
-            thisPosition.childrenFound();
+            thisPosition.childrenFound(); //mark that all next positions are valid and do not need reprocessing
         } else {
-            thisPosition.resortPositions();
+            thisPosition.resortPositions(); //resort the next positions based on evaluation
         }
         
-        return currentEval;
+        return currentEval; //return the current evaluation
     }
 
 

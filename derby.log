@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Wed Feb 07 16:21:09 NZDT 2024:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018d-8195-6bfc-00001f493cb8 
+Thu Feb 08 14:19:57 NZDT 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018d-864c-cee2-00001e60c178 
 on database directory C:\Users\tasma\OneDrive - AUT University\Documents\NetBeansProjects\ChessGUI\chessDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09 
 Loaded from file:/C:/Users/tasma/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
 java.vendor=Oracle Corporation
