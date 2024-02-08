@@ -22,7 +22,8 @@ import javax.swing.SwingUtilities;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class ChessboardPanel extends JPanel {
 

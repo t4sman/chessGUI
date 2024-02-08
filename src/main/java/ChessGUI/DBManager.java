@@ -5,8 +5,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+/**
+ *
+ * @author Tasman James Keenan
+ * studentID: 21147547
+ */
 
 
 public final class DBManager {
@@ -44,7 +48,7 @@ public final class DBManager {
         } catch (SQLException ex) {
             System.err.println("SQLException: " + ex.getMessage());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Derby driver not found, opening book functionality is disabled");
         }        
     }
 

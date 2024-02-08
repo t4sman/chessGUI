@@ -15,7 +15,8 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class MainMenu extends javax.swing.JPanel {
 

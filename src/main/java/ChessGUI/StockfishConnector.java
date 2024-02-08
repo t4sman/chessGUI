@@ -11,11 +11,8 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 /**
  *
- *
- *
- * @author Tasman Keenan 
- * 
- *
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class StockfishConnector {
     private final Process stockfishProcess;
@@ -28,7 +25,7 @@ public class StockfishConnector {
 
         // Check if the executable is found
         if (stockfishStream == null) {
-            throw new IOException("Stockfish executable not found in the classpath.");
+            throw new IOException("Stockfish executable not found");
         }
 
         // Write the executable to a temporary file

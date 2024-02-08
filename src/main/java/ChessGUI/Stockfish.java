@@ -10,7 +10,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class Stockfish extends Player {
 

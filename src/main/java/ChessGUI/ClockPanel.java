@@ -14,7 +14,8 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class ClockPanel extends JPanel {
     

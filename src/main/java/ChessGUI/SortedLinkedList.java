@@ -10,7 +10,8 @@ import java.util.Arrays;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class SortedLinkedList<F extends Comparable<F>, E> {
     private class Node<F extends Comparable<F>, E> implements Comparable<Node<F,E>>{

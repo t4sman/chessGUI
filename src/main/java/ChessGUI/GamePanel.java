@@ -8,7 +8,8 @@ import java.awt.Color;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class GamePanel extends javax.swing.JPanel {
 

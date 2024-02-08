@@ -6,7 +6,8 @@ package ChessGUI;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;

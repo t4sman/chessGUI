@@ -17,6 +17,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ *
+ * @author Tasman James Keenan
+ * studentID: 21147547
+ */
+
 public class SoundManager {
 
     private static final String directory = "assets/sounds/";

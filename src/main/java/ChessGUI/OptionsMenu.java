@@ -8,7 +8,8 @@ package ChessGUI;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 import java.awt.Font;
 import java.awt.Label;

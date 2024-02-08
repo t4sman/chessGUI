@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author tasman
+ * @author Tasman James Keenan
  * studentID: 21147547
  */
 public class Chess {

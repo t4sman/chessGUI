@@ -6,7 +6,8 @@ package ChessGUI;
 
 /**
  *
- * @author tasma
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class BoardState //the state of the chessboard when a player is making a move.
 {

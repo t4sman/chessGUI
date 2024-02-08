@@ -5,18 +5,10 @@
 package ChessGUI;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-
 /**
  *
- *
- *
- * @author Tasman Keenan 
- * StudentID 21147547
- *
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public abstract class Player {
     protected Chess chess = null;

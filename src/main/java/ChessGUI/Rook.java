@@ -7,11 +7,8 @@ package ChessGUI;
 import java.util.ArrayList;
 /**
  *
- *
- *
- * @author Tasman Keenan 
- * StudentID 21147547
- *
+ * @author Tasman James Keenan
+ * studentID: 21147547
  */
 public class Rook extends Piece {
 
